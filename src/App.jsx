@@ -50,7 +50,11 @@ function App() {
         </button>
 
         {loading && <p className="mt-4">Loading...</p>}
-        {error && <p className="text-red-500 mt-4">{error}</p>}
+{error && (
+  <p className="text-red-500 mt-4 text-sm">
+    ❌ {error}
+  </p>
+)}
 
         {weather && location && (
           <div className="mt-5">
