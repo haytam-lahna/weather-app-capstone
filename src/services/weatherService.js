@@ -1,7 +1,8 @@
-// Get coordinates from city name
 export async function getCoordinates(city) {
   const response = await fetch(
-    `https://geocoding-api.open-meteo.com/v1/search?name=${city}&count=1`
+    `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(
+      city.trim()
+    )}&count=5&language=en`
   );
 
   if (!response.ok) {
@@ -11,12 +12,14 @@ export async function getCoordinates(city) {
   const data = await response.json();
 
   if (!data.results || data.results.length === 0) {
-    throw new Error("City not found");
+    throw new Error("City not found. Try another name.");
   }
 
+  // Take the best match
   const { latitude, longitude, name, country } = data.results[0];
   return { latitude, longitude, name, country };
 }
+
 
 // Get current weather
 export async function getWeather(latitude, longitude) {
