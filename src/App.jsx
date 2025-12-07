@@ -11,6 +11,7 @@ function App() {
   const handleSearch = async () => {
     if (!city.trim()) return;
 
+
     try {
       setLoading(true);
       setError("");
