@@ -35,12 +35,14 @@ function App() {
         <h1 className="text-2xl font-bold mb-4">Weather Dashboard</h1>
 
         <input
-          type="text"
-          placeholder="Enter city"
-          value={city}
-          onChange={(e) => setCity(e.target.value)}
-          className="w-full p-2 border rounded mb-3"
-        />
+  type="text"
+  placeholder="Enter city (e.g., London)"
+  value={city}
+  onChange={(e) => setCity(e.target.value)}
+  onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+  className="w-full p-2 border rounded mb-3"
+/>
+
 
         <button
           onClick={handleSearch}
