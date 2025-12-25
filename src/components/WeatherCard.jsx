@@ -1,16 +1,16 @@
-export default function WeatherCard({ weather }) {
-  if (!weather) return null
-
+function WeatherCard({ weather }) {
   return (
-    <div className="mt-6 bg-blue-50 p-4 rounded">
-      <h2 className="text-xl font-bold">{weather.name}</h2>
-      <p className="text-3xl">{Math.round(weather.main.temp)}°C</p>
-      <p className="capitalize">{weather.weather[0].description}</p>
+    <div className="bg-slate-800 p-6 rounded-lg mt-6 w-80 text-center">
+      <h2 className="text-xl font-semibold">{weather.name}</h2>
+      <p className="text-4xl mt-2">{Math.round(weather.main.temp)}°C</p>
+      <p className="capitalize mt-2">{weather.weather[0].description}</p>
 
-      <div className="grid grid-cols-2 gap-2 mt-3 text-sm">
+      <div className="mt-4 text-sm">
         <p>Humidity: {weather.main.humidity}%</p>
-        <p>Wind: {weather.wind.speed} km/h</p>
+        <p>Wind: {weather.wind.speed} m/s</p>
       </div>
     </div>
-  )
+  );
 }
+
+export default WeatherCard;
