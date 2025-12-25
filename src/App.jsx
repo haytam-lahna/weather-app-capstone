@@ -1,75 +1,42 @@
 import { useState } from "react";
-import { getCoordinates, getWeather } from "./services/weatherService";
+import SearchBar from "./components/SearchBar";
+import WeatherCard from "./components/WeatherCard";
+
+const API_KEY = "YOUR_API_KEY_HERE";
 
 function App() {
-  const [city, setCity] = useState("");
   const [weather, setWeather] = useState(null);
-  const [location, setLocation] = useState(null);
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const handleSearch = async () => {
-    if (!city.trim()) return;
-
-
+  const fetchWeather = async (city) => {
     try {
-      setLoading(true);
       setError("");
       setWeather(null);
 
-      const coords = await getCoordinates(city);
-      setLocation(coords);
+      const res = await fetch(
+        `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${API_KEY}`
+      );
 
-      const data = await getWeather(coords.latitude, coords.longitude);
-      setWeather(data.current_weather);
+      if (!res.ok) {
+        throw new Error("City not found");
+      }
+
+      const data = await res.json();
+      setWeather(data);
     } catch (err) {
       setError(err.message);
-    } finally {
-      setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-blue-100 flex items-center justify-center">
-      <div className="bg-white p-6 rounded-xl shadow-md w-80 text-center">
-        <h1 className="text-2xl font-bold mb-4">Weather Dashboard</h1>
+    <div className="min-h-screen flex flex-col items-center justify-center px-4">
+      <h1 className="text-3xl font-bold mb-6">🌦️ Weather Dashboard</h1>
 
-        <input
-  type="text"
-  placeholder="Enter city (e.g., London)"
-  value={city}
-  onChange={(e) => setCity(e.target.value)}
-  onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-  className="w-full p-2 border rounded mb-3"
-/>
+      <SearchBar onSearch={fetchWeather} />
 
+      {error && <p className="text-red-400 mt-4">{error}</p>}
 
-        <button
-          onClick={handleSearch}
-          className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition"
-        >
-          Search
-        </button>
-
-        {loading && <p className="mt-4">Loading...</p>}
-{error && (
-  <p className="text-red-500 mt-4 text-sm">
-    ❌ {error}
-  </p>
-)}
-
-        {weather && location && (
-          <div className="mt-5">
-            <h2 className="text-xl font-semibold">
-              {location.name}, {location.country}
-            </h2>
-            <p className="text-3xl mt-2">
-              {Math.round(weather.temperature)}°C
-            </p>
-            <p className="mt-1">Wind: {weather.windspeed} km/h</p>
-          </div>
-        )}
-      </div>
+      {weather && <WeatherCard weather={weather} />}
     </div>
   );
 }
